@@ -1,0 +1,34 @@
+<h1>Interact with API</h1>
+<div id="msg-box"></div>
+
+<input type="text" id="msg-input" placeholder="Type something..." />
+<button onclick="sendMsg()">Send</button>
+
+<script>
+   async function sendMsg() {
+     const msgInput = document.getElementById("msg-input");
+     const msgValue = msgInput.value;
+
+     const response = await fetch("/talk", {
+       method: "POST",
+       headers: {
+         "Content-Type": "application/json",
+       },
+       body: JSON.stringify({ msgValue }),
+     });
+
+     const data = await response.text();
+     displayMsg(msgValue, "Human");
+     displayMsg(data, "AI");
+
+     // Clear the message input after sending
+     msgInput.value = "";
+   }
+
+   function displayMsg(message, sender) {
+     const msgBox = document.getElementById("msg-box");
+     const messageElement = document.createElement("div");
+     messageElement.innerHTML = `${sender}: ${message}`;
+     msgBox.appendChild(messageElement);
+   }
+ </script>
